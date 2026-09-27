@@ -1,0 +1,11 @@
+[
+    {
+        "guid": "8a569ff4-48e9-4ab9-bc87-fcc7854dd69a",
+        "name": "Torrent Tags",
+        "description": "Imports tags from your torrent client and adds them to the corresponding media in your Jellyfin libraries.",
+        "overview": "Import your torrent tags in Jellyfin",
+        "owner": "maxime-douarre",
+        "category": "General",
+        "versions": []
+    }
+]

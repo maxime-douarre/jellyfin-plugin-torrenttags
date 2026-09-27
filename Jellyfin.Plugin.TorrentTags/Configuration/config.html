@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Torrent Tags</title>
+</head>
+<body>
+    <div id="configPage" data-role="page" class="page type-interior pluginConfigurationPage configPage" data-require="emby-input,emby-button,emby-select">
+        <div data-role="content">
+            <div class="content-primary">
+                <h1>Torrent Tags</h1>
+                <form class="configForm">
+                    <div class="selectContainer">
+                        <label class="selectLabel" for="torrentClient">Torrent client</label>
+                        <select is="emby-select" id="torrentClient" class="emby-select-withcolor">
+                            <option value="qbittorrent">qBittorrent</option>
+                        </select>
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="text" id="qbittorrentBaseAddress" label="qBittorrent Web UI base address" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="text" id="qbittorrentUsername" label="qBittorrent Web UI username" />
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="password" id="qbittorrentPassword" label="qBittorrent Web UI password" />
+                    </div>
+                    <br />
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block"><span>Save</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            const pluginId = "8a569ff4-48e9-4ab9-bc87-fcc7854dd69a";
+
+            document.querySelector('.configPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    document.querySelector('#torrentClient').value = config.TorrentClient;
+                    document.querySelector('#qbittorrentBaseAddress').value = config.QbittorrentBaseAddress;
+                    document.querySelector('#qbittorrentUsername').value = config.QbittorrentUsername;
+                    document.querySelector('#qbittorrentPassword').value = config.QbittorrentPassword;
+
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            document.querySelector('.configForm').addEventListener('submit', function (e) {
+                Dashboard.showLoadingMsg();
+
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    config.TorrentClient = document.querySelector('#torrentClient').value;
+                    config.QbittorrentBaseAddress = document.querySelector('#qbittorrentBaseAddress').value;
+                    config.QbittorrentUsername = document.querySelector('#qbittorrentUsername').value;
+                    config.QbittorrentPassword = document.querySelector('#qbittorrentPassword').value;
+
+                    ApiClient.updatePluginConfiguration(pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
+                });
+
+                e.preventDefault();
+                return false;
+            });
+        </script>
+    </div>
+</body>
+</html>
