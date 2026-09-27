@@ -14,7 +14,7 @@ Add the following repository to Jellyfin's plugin repositories:
 
 `https://raw.githubusercontent.com/maxime-douarre/jellyfin-plugin-torrenttags/refs/heads/main/manifest.json`
 
-This plugin follows the releases of [Jellyfin](https://github.com/jellyfin/jellyfin/releases).
+This plugin follows the release cycle of [Jellyfin](https://github.com/jellyfin/jellyfin/releases).
 
 ## How to use
 
