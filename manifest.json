@@ -6,6 +6,15 @@
         "overview": "Import your torrent tags in Jellyfin",
         "owner": "maxime-douarre",
         "category": "General",
-        "versions": []
+        "versions": [
+            {
+                "version": "12.1.0.0",
+                "changelog": "## What's Changed\n* Initial development by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/1\n\n## New Contributors\n* @maxime-douarre made their first contribution in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/1\n\n**Full Changelog**: https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/commits/v12.1.0.0",
+                "targetAbi": "12.1.0.0",
+                "sourceUrl": "https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/releases/download/v12.1.0.0/torrent-tags_12.1.0.0.zip",
+                "checksum": "31B123B2368AD047C73C3872484510A0",
+                "timestamp": "2026-09-27T10:51:38Z"
+            }
+        ]
     }
 ]
