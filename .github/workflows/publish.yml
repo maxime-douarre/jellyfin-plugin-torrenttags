@@ -47,14 +47,14 @@ jobs:
           --arg sourceUrl "https://github.com/${{ github.repository }}/releases/download/v${{ inputs.version }}/torrent-tags_${{ inputs.version }}.zip" \
           --arg checksum "$(md5sum Jellyfin.Plugin.TorrentTags/bin/Release/net10.0/publish/torrent-tags_${{ inputs.version }}.zip | cut -d ' ' -f 1)" \
           --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-          '.[0].versions += [{
+          '.[0].versions = [{
             version: $version,
             changelog: $changelog,
             targetAbi: $targetAbi,
             sourceUrl: $sourceUrl,
             checksum: $checksum,
             timestamp: $timestamp
-          }]' \
+          }] + .[0].versions' \
           manifest.json > manifest.json.tmp
         mv manifest.json.tmp manifest.json
     - name: Commit manifest
