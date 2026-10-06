@@ -8,20 +8,20 @@
     "category": "General",
     "versions": [
       {
-        "version": "12.1.0.0",
-        "changelog": "## What's Changed\n* Initial development by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/1\n\n## New Contributors\n* @maxime-douarre made their first contribution in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/1\n\n**Full Changelog**: https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/commits/v12.1.0.0",
-        "targetAbi": "12.1.0.0",
-        "sourceUrl": "https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/releases/download/v12.1.0.0/torrent-tags_12.1.0.0.zip",
-        "checksum": "31B123B2368AD047C73C3872484510A0",
-        "timestamp": "2026-09-27T10:51:38Z"
-      },
-      {
         "version": "12.2.0.0",
         "changelog": "## What's Changed\n* Add v12.1.0.0 to manifest by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/2\n* Add publish workflow by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/3\n* Update publish workflow permission by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/4\n* Add LICENSE file to published assets by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/5\n* Jellyfin 12.2 by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/6\n\n\n**Full Changelog**: https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/compare/v12.1.0.0...v12.2.0.0",
         "targetAbi": "12.2.0.0",
         "sourceUrl": "https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/releases/download/v12.2.0.0/torrent-tags_12.2.0.0.zip",
         "checksum": "f52f608e51a75b4df52a36672fd9de60",
         "timestamp": "2026-10-06T05:38:32Z"
+      },
+      {
+        "version": "12.1.0.0",
+        "changelog": "## What's Changed\n* Initial development by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/1\n\n## New Contributors\n* @maxime-douarre made their first contribution in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/1\n\n**Full Changelog**: https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/commits/v12.1.0.0",
+        "targetAbi": "12.1.0.0",
+        "sourceUrl": "https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/releases/download/v12.1.0.0/torrent-tags_12.1.0.0.zip",
+        "checksum": "31B123B2368AD047C73C3872484510A0",
+        "timestamp": "2026-09-27T10:51:38Z"
       }
     ]
   }
