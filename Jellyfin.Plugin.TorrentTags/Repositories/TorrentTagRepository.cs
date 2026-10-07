@@ -7,63 +7,6 @@ namespace Jellyfin.Plugin.TorrentTags.Repositories;
 
 public sealed class TorrentTagRepository : IDisposable
 {
-    #region DeleteOrphanTorrentTags
-    private const string CreateBaseItemTempTableCommandText = """
-        CREATE TEMP TABLE base_item(
-            id BLOB PRIMARY KEY
-        );
-        """;
-
-    private const string InsertBaseItemCommandText = """
-        INSERT INTO base_item(id)
-        VALUES($id);
-        """;
-
-    private const string DeleteOrphanTorrentTagsCommandText = """
-        DELETE FROM torrent_tag AS tt
-        WHERE NOT EXISTS (
-            SELECT 1 FROM base_item AS bi
-            WHERE bi.id = tt.item_id
-        );
-        DROP TABLE base_item;
-        """;
-    #endregion
-
-    #region GetBaseItemTorrentTags
-    private const string GetBaseItemTorrentTagsCommandText = """
-        SELECT tag
-        FROM torrent_tag
-        WHERE item_id = $item_id;
-        """;
-    #endregion
-
-    #region UpdateBaseItemTorrentTags
-    private const string AddBaseItemTorrentTagsCommandText = """
-        INSERT INTO torrent_tag(item_id, tag)
-        VALUES($item_id, $tag);
-        """;
-
-    private const string CreateTagTempTableCommandText = """
-        CREATE TEMP TABLE tag(
-            tag TEXT PRIMARY KEY
-        );
-        """;
-
-    private const string InsertTagCommandText = """
-        INSERT INTO tag(tag)
-        VALUES($tag);
-        """;
-
-    private const string DeleteBaseItemTorrentTagsCommandText = """
-        DELETE FROM torrent_tag AS tt
-        WHERE tt.item_id = $item_id AND EXISTS(
-            SELECT 1 FROM tag AS t
-            WHERE t.tag = tt.tag
-        );
-        DROP TABLE tag;
-        """;
-    #endregion
-
     private readonly SqliteConnection _connection;
 
     public TorrentTagRepository([FromKeyedServices(Plugin.DatabaseFileName)] SqliteConnection connection)
@@ -81,13 +24,20 @@ public sealed class TorrentTagRepository : IDisposable
 
         using (SqliteCommand createBaseItemTempTableCommand = _connection.CreateCommand())
         {
-            createBaseItemTempTableCommand.CommandText = CreateBaseItemTempTableCommandText;
+            createBaseItemTempTableCommand.CommandText = """
+                CREATE TEMP TABLE base_item(
+                    id BLOB PRIMARY KEY
+                );
+                """;
             createBaseItemTempTableCommand.ExecuteNonQuery();
         }
 
         using (SqliteCommand insertBaseItemCommand = _connection.CreateCommand())
         {
-            insertBaseItemCommand.CommandText = InsertBaseItemCommandText;
+            insertBaseItemCommand.CommandText = """
+                INSERT INTO base_item(id)
+                VALUES($id);
+                """;
 
             SqliteParameter baseItemIdParameter = insertBaseItemCommand.CreateParameter();
             baseItemIdParameter.ParameterName = "$id";
@@ -102,7 +52,14 @@ public sealed class TorrentTagRepository : IDisposable
 
         using (SqliteCommand deleteOrphanTorrentTagsCommand = _connection.CreateCommand())
         {
-            deleteOrphanTorrentTagsCommand.CommandText = DeleteOrphanTorrentTagsCommandText;
+            deleteOrphanTorrentTagsCommand.CommandText = """
+                DELETE FROM torrent_tag AS tt
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM base_item AS bi
+                    WHERE bi.id = tt.item_id
+                );
+                DROP TABLE base_item;
+                """;
             deleteOrphanTorrentTagsCommand.ExecuteNonQuery();
         }
 
@@ -114,7 +71,11 @@ public sealed class TorrentTagRepository : IDisposable
         _connection.Open();
 
         using SqliteCommand getBaseItemTorrentTagsCommand = _connection.CreateCommand();
-        getBaseItemTorrentTagsCommand.CommandText = GetBaseItemTorrentTagsCommandText;
+        getBaseItemTorrentTagsCommand.CommandText = """
+            SELECT tag
+            FROM torrent_tag
+            WHERE item_id = $item_id;
+            """;
         getBaseItemTorrentTagsCommand.Parameters.AddWithValue("$item_id", baseItemId);
 
         using SqliteDataReader getBaseItemTorrentTagsReader = getBaseItemTorrentTagsCommand.ExecuteReader();
@@ -138,7 +99,10 @@ public sealed class TorrentTagRepository : IDisposable
         if (tagsToAdd.Count > 0)
         {
             using SqliteCommand addBaseItemTorrentTagsCommand = _connection.CreateCommand();
-            addBaseItemTorrentTagsCommand.CommandText = AddBaseItemTorrentTagsCommandText;
+            addBaseItemTorrentTagsCommand.CommandText = """
+                INSERT INTO torrent_tag(item_id, tag)
+                VALUES($item_id, $tag);
+                """;
             addBaseItemTorrentTagsCommand.Parameters.AddWithValue("$item_id", baseItemId);
 
             SqliteParameter tagParameter = addBaseItemTorrentTagsCommand.CreateParameter();
@@ -156,13 +120,20 @@ public sealed class TorrentTagRepository : IDisposable
         {
             using (SqliteCommand createTagTempTableCommand = _connection.CreateCommand())
             {
-                createTagTempTableCommand.CommandText = CreateTagTempTableCommandText;
+                createTagTempTableCommand.CommandText = """
+                    CREATE TEMP TABLE tag(
+                        tag TEXT PRIMARY KEY
+                    );
+                    """;
                 createTagTempTableCommand.ExecuteNonQuery();
             }
 
             using (SqliteCommand insertTagCommand = _connection.CreateCommand())
             {
-                insertTagCommand.CommandText = InsertTagCommandText;
+                insertTagCommand.CommandText = """
+                    INSERT INTO tag(tag)
+                    VALUES($tag);
+                    """;
 
                 SqliteParameter tagParameter = insertTagCommand.CreateParameter();
                 tagParameter.ParameterName = "$tag";
@@ -177,7 +148,14 @@ public sealed class TorrentTagRepository : IDisposable
 
             using SqliteCommand deleteBaseItemTorrentTagsCommand = _connection.CreateCommand();
 
-            deleteBaseItemTorrentTagsCommand.CommandText = DeleteBaseItemTorrentTagsCommandText;
+            deleteBaseItemTorrentTagsCommand.CommandText = """
+                DELETE FROM torrent_tag AS tt
+                WHERE tt.item_id = $item_id AND EXISTS(
+                    SELECT 1 FROM tag AS t
+                    WHERE t.tag = tt.tag
+                );
+                DROP TABLE tag;
+                """;
             deleteBaseItemTorrentTagsCommand.Parameters.AddWithValue("$item_id", baseItemId);
             deleteBaseItemTorrentTagsCommand.ExecuteNonQuery();
         }

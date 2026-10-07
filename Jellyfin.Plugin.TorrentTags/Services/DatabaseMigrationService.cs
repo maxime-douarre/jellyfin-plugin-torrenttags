@@ -12,24 +12,6 @@ namespace Jellyfin.Plugin.TorrentTags.Services;
 
 public sealed partial class DatabaseMigrationService : IDisposable
 {
-    private const string CreateMigrationTableCommandText = """
-        CREATE TABLE IF NOT EXISTS migration(
-            version INTEGER NOT NULL,
-            description TEXT NOT NULL);
-        """;
-
-    private const string GetCurrentMigrationVersionCommandText = """
-        SELECT version
-        FROM migration
-        LIMIT 1;
-        """;
-
-    private const string UpdateCurrentMigrationCommandText = """
-        DELETE FROM migration;
-        INSERT INTO migration(version, description)
-        VALUES($version, $description);
-        """;
-
     private readonly SqliteConnection _connection;
 
     public DatabaseMigrationService([FromKeyedServices(Plugin.DatabaseFileName)] SqliteConnection connection)
@@ -46,7 +28,11 @@ public sealed partial class DatabaseMigrationService : IDisposable
 
         using (SqliteCommand createMigrationTableCommand = _connection.CreateCommand())
         {
-            createMigrationTableCommand.CommandText = CreateMigrationTableCommandText;
+            createMigrationTableCommand.CommandText = """
+                CREATE TABLE IF NOT EXISTS migration(
+                    version INTEGER NOT NULL,
+                    description TEXT NOT NULL);
+                """;
             createMigrationTableCommand.ExecuteNonQuery();
         }
 
@@ -54,7 +40,11 @@ public sealed partial class DatabaseMigrationService : IDisposable
 
         using (SqliteCommand getCurrentMigrationVersionCommand = _connection.CreateCommand())
         {
-            getCurrentMigrationVersionCommand.CommandText = GetCurrentMigrationVersionCommandText;
+            getCurrentMigrationVersionCommand.CommandText = """
+                SELECT version
+                FROM migration
+                LIMIT 1;
+                """;
 
             using SqliteDataReader getCurrentMigrationVersionReader = getCurrentMigrationVersionCommand.ExecuteReader();
 
@@ -91,7 +81,11 @@ public sealed partial class DatabaseMigrationService : IDisposable
 
             using (SqliteCommand updateCurrentMigrationCommand = _connection.CreateCommand())
             {
-                updateCurrentMigrationCommand.CommandText = UpdateCurrentMigrationCommandText;
+                updateCurrentMigrationCommand.CommandText = """
+                    DELETE FROM migration;
+                    INSERT INTO migration(version, description)
+                    VALUES($version, $description);
+                    """;
                 updateCurrentMigrationCommand.Parameters.AddWithValue("$version", migrationToApply.Version);
                 updateCurrentMigrationCommand.Parameters.AddWithValue("$description", migrationToApply.Description);
                 updateCurrentMigrationCommand.ExecuteNonQuery();
