@@ -12,11 +12,13 @@ using Jellyfin.Plugin.TorrentTags.Models;
 
 namespace Jellyfin.Plugin.TorrentTags.TorrentClients;
 
-public sealed class QbittorrentClient : ITorrentClient, IDisposable
+public class QbittorrentClient : ITorrentClient, IDisposable
 {
     public const string ServiceKey = "qbittorrent";
 
     private readonly HttpClient _httpClient;
+
+    private int _isDisposed;
 
     public QbittorrentClient()
     {
@@ -61,7 +63,21 @@ public sealed class QbittorrentClient : ITorrentClient, IDisposable
     }
 
     public void Dispose()
-        => _httpClient.Dispose();
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
+        {
+            if (disposing)
+            {
+                _httpClient.Dispose();
+            }
+        }
+    }
 
     private record TorrentDto(
         [property: JsonPropertyName("content_path")] string ContentPath,

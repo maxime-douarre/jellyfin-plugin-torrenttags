@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jellyfin.Plugin.TorrentTags.Repositories;
 
-public sealed class TorrentTagRepository : IDisposable
+public class TorrentTagRepository : IDisposable
 {
     private readonly SqliteConnection _connection;
+
+    private int _isDisposed;
 
     public TorrentTagRepository([FromKeyedServices(Plugin.DatabaseFileName)] SqliteConnection connection)
     {
@@ -164,5 +167,19 @@ public sealed class TorrentTagRepository : IDisposable
     }
 
     public void Dispose()
-        => _connection.Dispose();
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
+        {
+            if (disposing)
+            {
+                _connection.Dispose();
+            }
+        }
+    }
 }
