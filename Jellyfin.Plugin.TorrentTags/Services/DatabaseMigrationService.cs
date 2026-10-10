@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -57,17 +58,21 @@ public partial class DatabaseMigrationService : IDisposable
 
         Assembly assembly = GetType().Assembly;
 
-        IOrderedEnumerable<Migration> orderedMigrationsToApply = assembly.GetManifestResourceNames()
+        IReadOnlyList<Migration> orderedMigrations = [.. assembly.GetManifestResourceNames()
             .Select(resource => MigrationResourceRegex().Match(resource))
             .Where(match => match.Success)
             .Select(match => new Migration(
                 Version: int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
                 Description: match.Groups[2].Value,
                 ManifestResourceName: match.Value))
-            .Where(migration => migration.Version > currentMigrationVersion)
-            .OrderBy(migration => migration.Version);
+            .OrderBy(migration => migration.Version)];
 
-        foreach (Migration migrationToApply in orderedMigrationsToApply)
+        int latestMigrationVersion = orderedMigrations[^1].Version;
+
+        if (latestMigrationVersion < currentMigrationVersion)
+            throw new InvalidOperationException($"Latest migration version ({latestMigrationVersion}) precedes current migration version ({currentMigrationVersion}).");
+
+        foreach (Migration migrationToApply in orderedMigrations.Where(migration => migration.Version > currentMigrationVersion))
         {
             using Stream migrationResourceStream = assembly.GetManifestResourceStream(migrationToApply.ManifestResourceName)
                 ?? throw new InvalidOperationException($"Manifest resource '{migrationToApply.ManifestResourceName}' is null.");
