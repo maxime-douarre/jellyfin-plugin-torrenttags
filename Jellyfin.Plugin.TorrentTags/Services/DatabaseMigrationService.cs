@@ -5,14 +5,17 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jellyfin.Plugin.TorrentTags.Services;
 
-public sealed partial class DatabaseMigrationService : IDisposable
+public partial class DatabaseMigrationService : IDisposable
 {
     private readonly SqliteConnection _connection;
+
+    private int _isDisposed;
 
     public DatabaseMigrationService([FromKeyedServices(Plugin.DatabaseFileName)] SqliteConnection connection)
     {
@@ -98,7 +101,21 @@ public sealed partial class DatabaseMigrationService : IDisposable
     }
 
     public void Dispose()
-        => _connection.Dispose();
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
+        {
+            if (disposing)
+            {
+                _connection.Dispose();
+            }
+        }
+    }
 
     private record Migration(
         int Version,
