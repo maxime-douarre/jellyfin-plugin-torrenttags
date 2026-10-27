@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "12.4.0.0",
+        "changelog": "## What's Changed\n* Jellyfin 12.4 by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/13\n\n\n**Full Changelog**: https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/compare/v12.3.0.0...v12.4.0.0",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/releases/download/v12.4.0.0/torrent-tags_12.4.0.0.zip",
+        "checksum": "a3e59a9391f3240dcca5e00e2b625267",
+        "timestamp": "2026-10-27T06:35:09Z"
+      },
+      {
         "version": "12.3.0.0",
         "changelog": "## What's Changed\n* Fix plugin versions order by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/7\n* Remove constant fields by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/8\n* Unseal disposable classes by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/9\n* Latest migration version by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/10\n* Update README by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/11\n* Jellyfin 12.3 by @maxime-douarre in https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/pull/12\n\n\n**Full Changelog**: https://github.com/maxime-douarre/jellyfin-plugin-torrenttags/compare/v12.2.0.0...v12.3.0.0",
         "targetAbi": "12.3.0.0",
